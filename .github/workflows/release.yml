@@ -1,0 +1,63 @@
+name: Build and Release Modules
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build module ZIPs and compute hashes
+        run: |
+          mkdir -p dist
+          for dir in modules/*/; do
+            module_id=$(basename "$dir")
+            echo "Packaging $module_id..."
+            (cd "$dir" && zip -r "../../dist/${module_id}.zip" . -x "session_data/*" -x ".DS_Store" -x "*.zip")
+            sha256=$(sha256sum "dist/${module_id}.zip" | awk '{print $1}')
+            echo "${module_id}=${sha256}" >> "$GITHUB_ENV"
+            echo "  SHA-256: ${sha256}"
+          done
+
+      - name: Update modules.json with hashes
+        run: |
+          for dir in modules/*/; do
+            module_id=$(basename "$dir")
+            sha256=$(sha256sum "dist/${module_id}.zip" | awk '{print $1}')
+            # Use jq to update the sha256 field for this module
+            jq --arg id "$module_id" --arg hash "$sha256" \
+              '.modules[$id].sha256 = $hash' modules.json > modules.json.tmp
+            mv modules.json.tmp modules.json
+          done
+          echo "Updated modules.json:"
+          cat modules.json
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true
+          body_path: ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit updated modules.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add modules.json
+          if git diff --cached --quiet; then
+            echo "No changes to modules.json"
+          else
+            git commit -m "Update module hashes for $(git describe --tags --abbrev=0)"
+            git push origin HEAD:main
+          fi

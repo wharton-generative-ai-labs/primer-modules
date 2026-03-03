@@ -1,0 +1,194 @@
+{
+  "version": "0.13.0",
+  "kind": "meta",
+  "title": "Intake Agent",
+  "created": "2025-10-10T10:56:57.953Z",
+  "lastModified": "2026-02-17T17:30:06.470Z",
+  "author": "Lilach Mollick",
+  "authorEmail": "system@primerexperience.org",
+  "description": "Interviews an educator to create a Primer Experience.",
+  "requires": ["roleplay-template", "teachback-template"],
+  "aiConfigurations": {
+    "voice-interactive": {
+      "provider": "openai",
+      "api": "realtime",
+      "model": "gpt-realtime",
+      "streaming": true,
+      "modalities": [
+        "audio",
+        "text"
+      ],
+      "realtimeSettings": {
+        "silence_duration_ms": 1250,
+        "threshold": 0.5,
+        "prefix_padding_ms": 300,
+        "create_response": true,
+        "interrupt_response": true
+      }
+    },
+    "instruction-follow": {
+      "provider": "anthropic",
+      "api": "responses",
+      "model": "claude-opus-4-5",
+      "streaming": false,
+      "modalities": [
+        "text"
+      ]
+    },
+    "image-generation": {
+      "provider": "google",
+      "api": "generate",
+      "model": "gpt-4o",
+      "imageModel": "gemini-3-pro-image-preview",
+      "streaming": false,
+      "modalities": [
+        "text",
+        "image"
+      ]
+    }
+  },
+  "resources": {
+    "scenes": [
+      "resources/scenes/intake_agent.png"
+    ],
+    "sounds": [
+      "resources/sounds/confirmation_1.mp3",
+      "resources/sounds/confirmation_2.mp3",
+      "resources/sounds/confirmation_3.mp3",
+      "resources/sounds/error_1.mp3"
+    ],
+    "artifacts": [
+      {
+        "name": "Intake Checklist",
+        "type": "checklist",
+        "file": "resources/artifacts/intake-checklist.md",
+        "agents": [
+          "intake"
+        ],
+        "metadata": {
+          "description": "Private checklist for Intake agent behavior management",
+          "tags": [
+            "private:intake"
+          ],
+          "presentation": {
+            "type": "checklist",
+            "options": {}
+          }
+        }
+      },
+      {
+        "name": "Casting Director Checklist",
+        "type": "checklist",
+        "file": "resources/artifacts/casting-director-checklist.md",
+        "agents": [
+          "intake"
+        ],
+        "metadata": {
+          "description": "Private checklist for Casting Director agent behavior management",
+          "tags": [
+            "private:casting-director"
+          ],
+          "presentation": {
+            "type": "checklist",
+            "options": {}
+          }
+        }
+      }
+    ],
+    "instructions": {
+      "agent": {
+        "intake": "resources/instructions/agent/intake.md",
+        "design-agent": "resources/instructions/agent/design-agent.md",
+        "casting-director": "resources/instructions/agent/casting-director.md",
+        "image-generation-agent": "resources/instructions/agent/image-generation-agent.md",
+        "experience-builder": "resources/instructions/agent/experience-builder.md",
+        "hal": "resources/instructions/agent/hal.md",
+        "test": "resources/instructions/agent/test.md"
+      },
+      "supplemental": {
+        "checklists": "resources/instructions/supplemental/checklists.md",
+        "agent": "resources/instructions/supplemental/agent.md",
+        "scene": "resources/instructions/supplemental/scene.md",
+        "security": "resources/instructions/supplemental/security.md",
+        "tools": "resources/instructions/supplemental/tools.md",
+        "note-tools": "resources/instructions/supplemental/note-tools.md",
+        "matter-compiler-guide": "resources/instructions/supplemental/matter-compiler-guide.md",
+        "process": "resources/instructions/supplemental/process.md",
+        "templates": "resources/instructions/supplemental/templates.md",
+        "voices": "resources/instructions/supplemental/voices.md",
+        "journal": "resources/instructions/supplemental/journal.md",
+        "session-events": "resources/instructions/supplemental/session-events.md"
+      }
+    }
+  },
+  "agents": {
+    "intake": {
+      "name": "Intake",
+      "voice": "ballad",
+      "publicDescription": "An AI interviewing educators about their needs.",
+      "downstreamAgents": [],
+      "type": "frontend",
+      "aiConfiguration": "voice-interactive"
+    },
+    "design-agent": {
+      "name": "Design Agent",
+      "publicDescription": "An AI that creates comprehensive design documents for educational experiences.",
+      "type": "backend",
+      "temperature": 0.8,
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow"
+    },
+    "casting-director": {
+      "name": "Casting Director",
+      "publicDescription": "An AI that creates agent prompt artifacts by casting roles and enhancing templates.",
+      "type": "backend",
+      "temperature": 0.8,
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow"
+    },
+    "image-generation-agent": {
+      "name": "Image Generation Agent",
+      "publicDescription": "An AI that creates visual assets for educational experiences using Google Imagen.",
+      "type": "backend",
+      "temperature": 0.8,
+      "downstreamAgents": [],
+      "aiConfiguration": "image-generation"
+    },
+    "experience-builder": {
+      "name": "Experience Builder",
+      "publicDescription": "An AI that builds actual educational experiences using matter compiler tools.",
+      "type": "backend",
+      "temperature": 0.6,
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow"
+    },
+    "hal": {
+      "name": "HAL",
+      "voice": "ash",
+      "publicDescription": "A debugger.",
+      "type": "frontend",
+      "temperature": 0.6,
+      "downstreamAgents": [],
+      "aiConfiguration": "voice-interactive"
+    },
+    "test": {
+      "name": "Test Agent",
+      "publicDescription": "An AI that tests system functionality.",
+      "type": "backend",
+      "temperature": 0.6,
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow"
+    }
+  },
+  "initialAgent": "intake",
+  "tools": {
+    "plugins": [
+      "@primer/builtin-plugin",
+      "@primer/celebrate-plugin",
+      "@primer/slide-plugin",
+      "@primer/sound-plugin",
+      "@primer/web-search-plugin",
+      "@primer/session-plugin"
+    ]
+  }
+}

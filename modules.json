@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "modules": {
+    "intake-agent": {
+      "title": "Intake Agent",
+      "description": "Interviews an educator to create a Primer Experience.",
+      "version": "0.13.0",
+      "kind": "meta",
+      "author": "Lilach Mollick",
+      "requires": [
+        "roleplay-template",
+        "teachback-template"
+      ],
+      "sha256": "5e2b32f0f43df8a7aa4f58bb9737125ab0fffeabb868edf4fbd7a48f37398f99",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/intake-agent.zip"
+    },
+    "roleplay-template": {
+      "title": "Roleplay Template Experience",
+      "description": "A template roleplay experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
+      "version": "1.0.7",
+      "kind": "template",
+      "author": "",
+      "requires": [],
+      "sha256": "c3624c8e261966902c47f04f6ca01ad620cbf4f6fc642aa2bd1c22502dd8c774",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/roleplay-template.zip"
+    },
+    "teachback-template": {
+      "title": "Teachback Template Experience",
+      "description": "A template teachback experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
+      "version": "1.0.7",
+      "kind": "template",
+      "author": "",
+      "requires": [],
+      "sha256": "e2a4bc3e11ef2ea52f9776673118a47c07886403c885e57bcb385376e9865e94",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/teachback-template.zip"
+    }
+  }
+}

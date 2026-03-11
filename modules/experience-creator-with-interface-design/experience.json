@@ -59,9 +59,9 @@
   },
   "resources": {
     "scenes": [
-      "resources/scenes/creator_welcome.png",
-      "resources/scenes/creator_constructing_experience.png",
-      "resources/scenes/creator_creating_images.png"
+      "resources/scenes/creator_welcome.jpg",
+      "resources/scenes/creator_constructing_experience.jpg",
+      "resources/scenes/creator_creating_images.jpg"
     ],
     "sounds": [
       "resources/sounds/confirmation_1.mp3",

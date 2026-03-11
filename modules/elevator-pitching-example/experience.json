@@ -1,11 +1,11 @@
 {
-  "version": "1.5.6",
+  "version": "1.5.7",
   "kind": "bundled",
   "created": "2025-04-17T14:56:57.953Z",
-  "lastModified": "2026-03-11T08:52:19.235Z",
+  "lastModified": "2026-03-11T16:00:00.000Z",
   "author": "Ethan Mollick",
   "authorEmail": "emollick@gmail.com",
-  "title": "Game Agent",
+  "title": "Elevator Pitching Example",
   "description": "An elevator pitch learning experience",
   "aiConfigurations": {
     "default": {
@@ -28,16 +28,16 @@
   },
   "resources": {
     "scenes": [
-      "resources/scenes/adam_ingram_vc_pitch.png",
-      "resources/scenes/anna_ito_vc_pitch.png",
-      "resources/scenes/aria_iyer_vc_pitch.png",
-      "resources/scenes/interstitial.png",
-      "resources/scenes/loading.png",
-      "resources/scenes/mentor_feedback.png",
-      "resources/scenes/mentor_learning_to_pitch.png",
-      "resources/scenes/narrator_choices.png",
-      "resources/scenes/narrator_closing.png",
-      "resources/scenes/narrator_introduction.png"
+      "resources/scenes/adam_ingram_vc_pitch.jpg",
+      "resources/scenes/anna_ito_vc_pitch.jpg",
+      "resources/scenes/aria_iyer_vc_pitch.jpg",
+      "resources/scenes/interstitial.jpg",
+      "resources/scenes/loading.jpg",
+      "resources/scenes/mentor_feedback.jpg",
+      "resources/scenes/mentor_learning_to_pitch.jpg",
+      "resources/scenes/narrator_choices.jpg",
+      "resources/scenes/narrator_closing.jpg",
+      "resources/scenes/narrator_introduction.jpg"
     ],
     "sounds": [
       "resources/sounds/elevator.mp3"

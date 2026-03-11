@@ -12,7 +12,7 @@ Modules are self-contained Primer experiences that can be browsed, downloaded, a
 |--------|------|-------------|
 | **Experience Creator** | meta | Interviews an educator and builds a complete Primer experience. Requires roleplay-template and teachback-template. |
 | **Experience Creator with Interface Design** | meta | Extended creator that also designs custom interactive UI components. Requires tutor-template and lab-template. |
-| **Game Agent** | bundled | An elevator pitch learning experience. |
+| **Elevator Pitching Example** | bundled | An elevator pitch learning experience. |
 | **Roleplay Template** | template | A template roleplay experience with mentor → practice → feedback flow. |
 | **Teachback Template** | template | A template teachback experience with mentor → practice → feedback flow. |
 | **Tutor Template** | template | A template for interactive tutoring with custom component support. |
@@ -24,7 +24,7 @@ Modules are self-contained Primer experiences that can be browsed, downloaded, a
 modules/
   experience-creator/                          # Voice-driven experience builder
   experience-creator-with-interface-design/    # Extended builder with custom UI components
-  game-agent/                                  # Elevator pitch game
+  elevator-pitching-example/                    # Elevator pitch game
   roleplay-template/
   teachback-template/
   tutor-template/

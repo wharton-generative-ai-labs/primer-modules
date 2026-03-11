@@ -1,38 +1,81 @@
 {
   "version": "1.0",
   "modules": {
+    "experimental-intake-agent": {
+      "title": "Experimental Intake Agent",
+      "description": "Interviews an educator to create interactive, component-heavy Primer Experiences for science, math, and other hands-on subjects.",
+      "version": "0.1.0",
+      "kind": "meta",
+      "author": "Primer",
+      "requires": [
+        "tutor-template",
+        "lab-template"
+      ],
+      "sha256": "b4b05f21b5e81bac79572599e014b554e81f3c688194756f4a5e9a331079f163",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/experimental-intake-agent.zip"
+    },
+    "game-agent": {
+      "title": "Game Agent",
+      "description": "An elevator pitch learning experience",
+      "version": "1.5.6",
+      "kind": "bundled",
+      "author": "Ethan Mollick",
+      "requires": [],
+      "sha256": "e5c0218decc616742bb749a158714badcbffc908b99f9ba4616adef0843b98ca",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/game-agent.zip"
+    },
     "intake-agent": {
       "title": "Intake Agent",
       "description": "Interviews an educator to create a Primer Experience.",
-      "version": "0.13.0",
+      "version": "0.15.1",
       "kind": "meta",
       "author": "Lilach Mollick",
       "requires": [
         "roleplay-template",
         "teachback-template"
       ],
-      "sha256": "5e2b32f0f43df8a7aa4f58bb9737125ab0fffeabb868edf4fbd7a48f37398f99",
+      "sha256": "633c624e47b4a99e158facff0fd556705c0b61dc47abd12ea563d4111c285c83",
       "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/intake-agent.zip"
+    },
+    "lab-template": {
+      "title": "Lab Template Experience",
+      "description": "A template for multi-agent interactive lab experiences following the 5E instructional model (Engage/Explain, Explore/Elaborate, Evaluate) with custom components for hands-on experimentation.",
+      "version": "1.0.1",
+      "kind": "template",
+      "author": "",
+      "requires": [],
+      "sha256": "3177092a1a9a9df46bd77046ea380b8554fb0b733268e8603b3daf751074b7d8",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/lab-template.zip"
     },
     "roleplay-template": {
       "title": "Roleplay Template Experience",
       "description": "A template roleplay experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
-      "version": "1.0.7",
+      "version": "1.0.8",
       "kind": "template",
       "author": "",
       "requires": [],
-      "sha256": "c3624c8e261966902c47f04f6ca01ad620cbf4f6fc642aa2bd1c22502dd8c774",
+      "sha256": "7079a1495239879dcb588371cb1c0903a7ec55e28a92335c67a1b3b828e53b38",
       "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/roleplay-template.zip"
     },
     "teachback-template": {
       "title": "Teachback Template Experience",
       "description": "A template teachback experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
-      "version": "1.0.7",
+      "version": "1.0.8",
       "kind": "template",
       "author": "",
       "requires": [],
-      "sha256": "e2a4bc3e11ef2ea52f9776673118a47c07886403c885e57bcb385376e9865e94",
+      "sha256": "c291d3409b2c3809f441e5e20ebe4d53e657f56d38f6b3920482e528c2ee969c",
       "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/teachback-template.zip"
+    },
+    "tutor-template": {
+      "title": "Tutor Template Experience",
+      "description": "A template for interactive tutoring experiences with a single tutor agent that uses custom components for visualization, practice, and assessment.",
+      "version": "1.0.1",
+      "kind": "template",
+      "author": "",
+      "requires": [],
+      "sha256": "ea8f78a5fb5e2a23b784860c22bfbec44fcd11fd3bad795fdb6496524fd145c6",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/tutor-template.zip"
     }
   }
 }

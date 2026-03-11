@@ -1,18 +1,31 @@
 {
   "version": "1.0",
   "modules": {
-    "experimental-intake-agent": {
-      "title": "Experimental Intake Agent",
+    "experience-creator-with-interface-design": {
+      "title": "Experience Creator with Interface Design",
       "description": "Interviews an educator to create interactive, component-heavy Primer Experiences for science, math, and other hands-on subjects.",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "kind": "meta",
       "author": "Primer",
       "requires": [
         "tutor-template",
         "lab-template"
       ],
-      "sha256": "b4b05f21b5e81bac79572599e014b554e81f3c688194756f4a5e9a331079f163",
-      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/experimental-intake-agent.zip"
+      "sha256": "20d793bf7d79b89fae0ad2f68d7d33dc93162ba7d28cbe63495e5b8d13ea963a",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/experience-creator-with-interface-design.zip"
+    },
+    "experience-creator": {
+      "title": "Experience Creator",
+      "description": "Interviews an educator to create a Primer Experience.",
+      "version": "0.16.0",
+      "kind": "meta",
+      "author": "Lilach Mollick",
+      "requires": [
+        "roleplay-template",
+        "teachback-template"
+      ],
+      "sha256": "218e536a7cffd6bc2caf2e7c96932d4486b1b0df2c23aaf3ce895edfea8f6f65",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/experience-creator.zip"
     },
     "game-agent": {
       "title": "Game Agent",
@@ -21,21 +34,8 @@
       "kind": "bundled",
       "author": "Ethan Mollick",
       "requires": [],
-      "sha256": "e5c0218decc616742bb749a158714badcbffc908b99f9ba4616adef0843b98ca",
+      "sha256": "23113302abb23e3b29ca08c6ffd22e6ef7377734c015f344b66b0965ba849a7b",
       "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/game-agent.zip"
-    },
-    "intake-agent": {
-      "title": "Intake Agent",
-      "description": "Interviews an educator to create a Primer Experience.",
-      "version": "0.15.1",
-      "kind": "meta",
-      "author": "Lilach Mollick",
-      "requires": [
-        "roleplay-template",
-        "teachback-template"
-      ],
-      "sha256": "633c624e47b4a99e158facff0fd556705c0b61dc47abd12ea563d4111c285c83",
-      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/intake-agent.zip"
     },
     "lab-template": {
       "title": "Lab Template Experience",

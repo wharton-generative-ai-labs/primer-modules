@@ -22,7 +22,7 @@ jobs:
           for dir in modules/*/; do
             module_id=$(basename "$dir")
             echo "Packaging $module_id..."
-            (cd "$dir" && zip -r "../../dist/${module_id}.zip" . -x "session_data/*" -x "*/.DS_Store" -x ".DS_Store" -x "*.zip")
+            (cd "$dir" && zip -r "../../dist/${module_id}.zip" . -x "session_data/*" -x "*.DS_Store" -x "*.zip")
             sha256=$(sha256sum "dist/${module_id}.zip" | awk '{print $1}')
             echo "${module_id}=${sha256}" >> "$GITHUB_ENV"
             echo "  SHA-256: ${sha256}"

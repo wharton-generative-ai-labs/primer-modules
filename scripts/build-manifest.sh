@@ -27,7 +27,7 @@ if [[ "${1:-}" == "--zip" ]]; then
   for dir in "$MODULES_DIR"/*/; do
     module_id=$(basename "$dir")
     echo "  Zipping $module_id..."
-    (cd "$dir" && zip -r "$DIST_DIR/${module_id}.zip" . -x "session_data/*" -x ".DS_Store" -x "*.zip" -q)
+    (cd "$dir" && zip -r "$DIST_DIR/${module_id}.zip" . -x "session_data/*" -x "*/.DS_Store" -x ".DS_Store" -x "*.zip" -q)
   done
 fi
 

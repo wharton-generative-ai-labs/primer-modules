@@ -1,9 +1,9 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "kind": "meta",
-  "title": "Experimental Intake Agent",
+  "title": "Experience Creator with Interface Design",
   "created": "2026-03-05T00:00:00.000Z",
-  "lastModified": "2026-03-11T09:02:01.000Z",
+  "lastModified": "2026-03-11T15:30:00.000Z",
   "author": "Primer",
   "authorEmail": "system@primerexperience.org",
   "description": "Interviews an educator to create interactive, component-heavy Primer Experiences for science, math, and other hands-on subjects.",
@@ -59,7 +59,9 @@
   },
   "resources": {
     "scenes": [
-      "resources/scenes/intake_agent.png"
+      "resources/scenes/creator_welcome.png",
+      "resources/scenes/creator_constructing_experience.png",
+      "resources/scenes/creator_creating_images.png"
     ],
     "sounds": [
       "resources/sounds/confirmation_1.mp3",

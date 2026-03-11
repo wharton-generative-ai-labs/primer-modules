@@ -10,17 +10,25 @@ Modules are self-contained Primer experiences that can be browsed, downloaded, a
 
 | Module | Kind | Description |
 |--------|------|-------------|
-| **Intake Agent** | meta | Interviews an educator to create a Primer Experience. Requires roleplay-template and teachback-template. |
+| **Experience Creator** | meta | Interviews an educator and builds a complete Primer experience. Requires roleplay-template and teachback-template. |
+| **Experience Creator with Interface Design** | meta | Extended creator that also designs custom interactive UI components. Requires tutor-template and lab-template. |
+| **Game Agent** | bundled | An elevator pitch learning experience. |
 | **Roleplay Template** | template | A template roleplay experience with mentor → practice → feedback flow. |
 | **Teachback Template** | template | A template teachback experience with mentor → practice → feedback flow. |
+| **Tutor Template** | template | A template for interactive tutoring with custom component support. |
+| **Lab Template** | template | A template for multi-agent interactive lab experiences following the 5E model. |
 
 ## Repository Structure
 
 ```
 modules/
-  intake-agent/           # Browsable source files
+  experience-creator/                          # Voice-driven experience builder
+  experience-creator-with-interface-design/    # Extended builder with custom UI components
+  game-agent/                                  # Elevator pitch game
   roleplay-template/
   teachback-template/
+  tutor-template/
+  lab-template/
 scripts/
   build-manifest.sh       # Regenerates modules.json from experience.json files
 modules.json              # Registry manifest (used by Primer for discovery)
@@ -46,7 +54,7 @@ Download a module ZIP from the [latest release](https://github.com/wharton-gener
 
 Modules can declare dependencies on other modules via the `requires` field in their `experience.json`. When installing a module through Primer, missing dependencies are automatically installed first.
 
-For example, the Intake Agent requires both template modules:
+For example, the Experience Creator requires both template modules:
 
 ```json
 {

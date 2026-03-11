@@ -1,9 +1,9 @@
 {
-  "version": "0.15.1",
+  "version": "0.16.0",
   "kind": "meta",
-  "title": "Intake Agent",
+  "title": "Experience Creator",
   "created": "2025-10-10T10:56:57.953Z",
-  "lastModified": "2026-03-11T09:30:06.470Z",
+  "lastModified": "2026-03-11T15:30:00.000Z",
   "author": "Lilach Mollick",
   "authorEmail": "system@primerexperience.org",
   "description": "Interviews an educator to create a Primer Experience.",
@@ -49,7 +49,9 @@
   },
   "resources": {
     "scenes": [
-      "resources/scenes/intake_agent.png"
+      "resources/scenes/creator_welcome.png",
+      "resources/scenes/creator_constructing_experience.png",
+      "resources/scenes/creator_creating_images.png"
     ],
     "sounds": [
       "resources/sounds/confirmation_1.mp3",

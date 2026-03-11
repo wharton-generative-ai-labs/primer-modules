@@ -1,5 +1,5 @@
 {
-  "version": "1.0.7",
+  "version": "1.0.8",
   "kind": "template",
   "title": "Roleplay Template Experience",
   "description": "A template roleplay experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
@@ -7,17 +7,24 @@
     "voice-interactive": {
       "provider": "openai",
       "api": "realtime",
-      "model": "gpt-realtime",
+      "model": "gpt-realtime-1.5",
       "streaming": true,
       "modalities": [
         "audio",
         "text"
-      ]
+      ],
+      "realtimeSettings": {
+        "silence_duration_ms": 1500,
+        "threshold": 0.7,
+        "prefix_padding_ms": 300,
+        "create_response": true,
+        "interrupt_response": true
+      }
     },
     "analytics": {
       "provider": "anthropic",
       "api": "responses",
-      "model": "claude-opus-4-5",
+      "model": "claude-opus-4-6",
       "streaming": false,
       "modalities": [
         "text"
@@ -126,5 +133,5 @@
       "@primer/slide-plugin"
     ]
   },
-  "lastModified": "2026-01-15T10:30:51.107Z"
+  "lastModified": "2026-03-11T08:30:51.107Z"
 }

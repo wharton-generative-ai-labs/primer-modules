@@ -1,0 +1,145 @@
+{
+  "version": "1.5.6",
+  "kind": "bundled",
+  "created": "2025-04-17T14:56:57.953Z",
+  "lastModified": "2026-03-11T08:52:19.235Z",
+  "author": "Ethan Mollick",
+  "authorEmail": "emollick@gmail.com",
+  "title": "Game Agent",
+  "description": "An elevator pitch learning experience",
+  "aiConfigurations": {
+    "default": {
+      "provider": "openai",
+      "api": "realtime",
+      "model": "gpt-realtime-1.5",
+      "streaming": true,
+      "modalities": [
+        "audio",
+        "text"
+      ],
+      "realtimeSettings": {
+        "silence_duration_ms": 1500,
+        "threshold": 0.7,
+        "prefix_padding_ms": 300,
+        "create_response": true,
+        "interrupt_response": true
+      }
+    }
+  },
+  "resources": {
+    "scenes": [
+      "resources/scenes/adam_ingram_vc_pitch.png",
+      "resources/scenes/anna_ito_vc_pitch.png",
+      "resources/scenes/aria_iyer_vc_pitch.png",
+      "resources/scenes/interstitial.png",
+      "resources/scenes/loading.png",
+      "resources/scenes/mentor_feedback.png",
+      "resources/scenes/mentor_learning_to_pitch.png",
+      "resources/scenes/narrator_choices.png",
+      "resources/scenes/narrator_closing.png",
+      "resources/scenes/narrator_introduction.png"
+    ],
+    "sounds": [
+      "resources/sounds/elevator.mp3"
+    ],
+    "instructions": {
+      "agent": {
+        "narratorStart": "resources/instructions/agent/narratorStart.md",
+        "mentor": "resources/instructions/agent/mentor.md",
+        "choices": "resources/instructions/agent/choices.md",
+        "adam": "resources/instructions/agent/adam.md",
+        "anna": "resources/instructions/agent/anna.md",
+        "aria": "resources/instructions/agent/aria.md",
+        "feedback": "resources/instructions/agent/feedback.md",
+        "narratorEnd": "resources/instructions/agent/narratorEnd.md"
+      },
+      "supplemental": {
+        "agent": "resources/instructions/supplemental/agent.md",
+        "debugMode": "resources/instructions/supplemental/debugMode.md",
+        "elevatorPitching": "resources/instructions/supplemental/elevatorPitching.md",
+        "errorHandling": "resources/instructions/supplemental/errorHandling.md",
+        "scene": "resources/instructions/supplemental/scene.md",
+        "secrets": "resources/instructions/supplemental/secrets.md",
+        "tools": "resources/instructions/supplemental/tools.md",
+        "vc_character": "resources/instructions/supplemental/vc_character.md",
+        "vc_overview": "resources/instructions/supplemental/vc_overview.md"
+      }
+    }
+  },
+  "agents": {
+    "narratorStart": {
+      "name": "Introduction",
+      "voice": "ballad",
+      "publicDescription": "A fast-paced friendly narrator to the game that asks a few questions of the student.",
+      "downstreamAgents": [
+        "mentor"
+      ]
+    },
+    "mentor": {
+      "name": "Mentor",
+      "voice": "marin",
+      "publicDescription": "A fast-paced mentor that helps students understand what an elevator pitch is.",
+      "downstreamAgents": [
+        "choices"
+      ]
+    },
+    "choices": {
+      "name": "Choices",
+      "voice": "ballad",
+      "publicDescription": "A polite narrator offering choices to a student playing a game.",
+      "downstreamAgents": [
+        "adam",
+        "anna",
+        "aria"
+      ]
+    },
+    "adam": {
+      "name": "Adam Ingram",
+      "voice": "echo",
+      "publicDescription": "A high-powered, busy venture capital investor that students will pitch to.",
+      "downstreamAgents": [
+        "feedback"
+      ]
+    },
+    "anna": {
+      "name": "Anna Ito",
+      "voice": "shimmer",
+      "publicDescription": "A high-powered, busy venture capital investor that students will pitch to.",
+      "downstreamAgents": [
+        "feedback"
+      ]
+    },
+    "aria": {
+      "name": "Aria Iyer",
+      "voice": "sage",
+      "publicDescription": "A high-powered, busy venture capital investor that students will pitch to.",
+      "downstreamAgents": [
+        "feedback"
+      ]
+    },
+    "feedback": {
+      "name": "Feedback",
+      "voice": "ballad",
+      "publicDescription": "A polite feedback agent.",
+      "downstreamAgents": [
+        "narratorEnd"
+      ]
+    },
+    "narratorEnd": {
+      "name": "Conclusion",
+      "voice": "ballad",
+      "publicDescription": "A fast-paced friendly narrator to the game that asks a few questions of the student.",
+      "downstreamAgents": []
+    }
+  },
+  "initialAgent": "narratorStart",
+  "tools": {
+    "plugins": [
+      "@primer/builtin-plugin",
+      "@primer/sound-plugin",
+      "@primer/notes-plugin",
+      "@primer/slide-plugin",
+      "@primer/session-plugin"
+    ]
+  }
+}

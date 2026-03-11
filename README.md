@@ -1,6 +1,6 @@
 # Primer Modules
 
-Official module registry for [Primer](https://github.com/wharton-generative-ai-labs/artifex), the interactive AI experience platform from Wharton Generative AI Labs.
+Official module registry for [Primer](https://github.com/wharton-generative-ai-labs/primer), the interactive AI experience platform from Wharton Generative AI Labs.
 
 ## What are Modules?
 
@@ -21,10 +21,12 @@ modules/
   intake-agent/           # Browsable source files
   roleplay-template/
   teachback-template/
+scripts/
+  build-manifest.sh       # Regenerates modules.json from experience.json files
 modules.json              # Registry manifest (used by Primer for discovery)
 ```
 
-- **`modules/`** contains the raw, browsable source files for each module
+- **`modules/`** contains the raw, browsable source files for each module. Each module has an `experience.json` (metadata, version, agent configs), agent prompts in `resources/instructions/agent/`, and supporting resources.
 - **`modules.json`** is the registry manifest that Primer fetches to discover available modules
 - **ZIPs** are built automatically by GitHub Actions and published as release assets (never committed)
 
@@ -52,18 +54,41 @@ For example, the Intake Agent requires both template modules:
 }
 ```
 
+## Making Changes
+
+To update a module (e.g. editing an agent prompt, changing configuration):
+
+1. **Edit the module files** under `modules/<module-id>/` (prompts live in `resources/instructions/agent/`)
+2. **Bump the version** in the module's `experience.json` — this is required so Primer recognizes the update as a new version
+3. **Commit and push** your changes to `main`
+4. **Tag a release** to trigger the build:
+   ```bash
+   git tag v1.2.0
+   git push origin v1.2.0
+   ```
+5. The GitHub Action will package, hash, and publish the modules automatically (see [Releases](#releases))
+
+> **Important:** Pushing to `main` alone does not publish anything. You must push a version tag (`v*`) to trigger the release workflow.
+
+You can also regenerate `modules.json` locally for verification:
+
+```bash
+./scripts/build-manifest.sh          # Rebuild manifest from experience.json files
+./scripts/build-manifest.sh --zip    # Also build ZIPs into dist/ and compute hashes
+```
+
 ## Publishing Your Own Modules
 
 You can host your own module registry by creating a repository with the same structure and a `modules.json` manifest. Configure Primer to use your registry by adding its URL to the `MODULE_REGISTRY_URLS` environment variable (comma-separated, multiple registries supported).
 
 ## Releases
 
-Releases are created by tagging a commit (e.g., `v1.0.0`). The GitHub Action automatically:
+Releases are created by pushing a version tag (e.g., `git tag v1.0.0 && git push origin v1.0.0`), or via manual workflow dispatch. The GitHub Action automatically:
 
 1. Zips each module directory
 2. Computes SHA-256 hashes for integrity verification
-3. Updates `modules.json` with the hashes
-4. Publishes the ZIPs as release assets
+3. Updates `modules.json` with the hashes and commits the change back to `main`
+4. Publishes the ZIPs as release assets on a GitHub Release
 
 ## License
 

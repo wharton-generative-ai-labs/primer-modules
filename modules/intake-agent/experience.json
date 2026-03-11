@@ -1,9 +1,9 @@
 {
-  "version": "0.13.0",
+  "version": "0.15.1",
   "kind": "meta",
   "title": "Intake Agent",
   "created": "2025-10-10T10:56:57.953Z",
-  "lastModified": "2026-02-17T17:30:06.470Z",
+  "lastModified": "2026-03-11T09:30:06.470Z",
   "author": "Lilach Mollick",
   "authorEmail": "system@primerexperience.org",
   "description": "Interviews an educator to create a Primer Experience.",
@@ -12,15 +12,15 @@
     "voice-interactive": {
       "provider": "openai",
       "api": "realtime",
-      "model": "gpt-realtime",
+      "model": "gpt-realtime-1.5",
       "streaming": true,
       "modalities": [
         "audio",
         "text"
       ],
       "realtimeSettings": {
-        "silence_duration_ms": 1250,
-        "threshold": 0.5,
+        "silence_duration_ms": 1500,
+        "threshold": 0.7,
         "prefix_padding_ms": 300,
         "create_response": true,
         "interrupt_response": true
@@ -29,7 +29,7 @@
     "instruction-follow": {
       "provider": "anthropic",
       "api": "responses",
-      "model": "claude-opus-4-5",
+      "model": "claude-opus-4-6",
       "streaming": false,
       "modalities": [
         "text"
@@ -39,7 +39,7 @@
       "provider": "google",
       "api": "generate",
       "model": "gpt-4o",
-      "imageModel": "gemini-3-pro-image-preview",
+      "imageModel": "gemini-3.1-flash-image-preview",
       "streaming": false,
       "modalities": [
         "text",

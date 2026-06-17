@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "modules": {
+    "elevator-pitching-example": {
+      "title": "Elevator Pitching Example",
+      "description": "An elevator pitch learning experience",
+      "version": "1.5.7",
+      "kind": "bundled",
+      "author": "Ethan Mollick",
+      "requires": [],
+      "sha256": "54562e78206e0671b3373f54f1d3a2b97f6bfd2136f64aa8f8ddc4960983d2e8",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/elevator-pitching-example.zip"
+    },
+    "experience-creator": {
+      "title": "Experience Creator",
+      "description": "Interviews an educator to create a Primer Experience.",
+      "version": "0.16.0",
+      "kind": "meta",
+      "author": "Lilach Mollick",
+      "requires": [
+        "roleplay-template",
+        "teachback-template"
+      ],
+      "sha256": "42bc2ee14bd639168fb789ccbb096bb9871f90018608d90c513745270e0827e7",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/experience-creator.zip"
+    },
+    "roleplay-template": {
+      "title": "Roleplay Template Experience",
+      "description": "A template roleplay experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
+      "version": "1.0.9",
+      "kind": "template",
+      "author": "",
+      "requires": [],
+      "sha256": "302f82cc8c761b451b02df22ed5c6d82708f72e73b39432bfcf3833a35f87893",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/roleplay-template.zip"
+    },
+    "teachback-template": {
+      "title": "Teachback Template Experience",
+      "description": "A template teachback experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
+      "version": "1.0.9",
+      "kind": "template",
+      "author": "",
+      "requires": [],
+      "sha256": "d0d0c0c3453fd519a183924b3c8d3e302da85b4531b68955d64f539590af07fa",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/teachback-template.zip"
+    }
+  }
+}

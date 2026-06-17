@@ -1,0 +1,137 @@
+{
+  "version": "1.0.9",
+  "kind": "template",
+  "title": "Roleplay Template Experience",
+  "description": "A template roleplay experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
+  "aiConfigurations": {
+    "voice-interactive": {
+      "provider": "openai",
+      "api": "realtime",
+      "model": "gpt-realtime-1.5",
+      "streaming": true,
+      "modalities": [
+        "audio",
+        "text"
+      ],
+      "realtimeSettings": {
+        "silence_duration_ms": 1500,
+        "threshold": 0.7,
+        "prefix_padding_ms": 300,
+        "create_response": true,
+        "interrupt_response": true
+      }
+    },
+    "analytics": {
+      "provider": "anthropic",
+      "api": "responses",
+      "model": "claude-opus-4-6",
+      "streaming": false,
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  "resources": {
+    "scenes": [
+      "resources/scenes/mentor-scene.jpg",
+      "resources/scenes/practice-scene.jpg",
+      "resources/scenes/feedback-scene.jpg"
+    ],
+    "instructions": {
+      "agent": {
+        "mentor": "resources/instructions/agent/mentor.md",
+        "practice": "resources/instructions/agent/practice.md",
+        "feedback": "resources/instructions/agent/feedback.md",
+        "studentReport": "resources/instructions/agent/student_report.md",
+        "classAnalytics": "resources/instructions/agent/class_analytics.md"
+      },
+      "supplemental": {
+        "agent": "resources/instructions/supplemental/agent.md",
+        "checklists": "resources/instructions/supplemental/checklists.md",
+        "error-handling": "resources/instructions/supplemental/error-handling.md",
+        "note-tools": "resources/instructions/supplemental/note-tools.md",
+        "scene": "resources/instructions/supplemental/scene.md",
+        "security": "resources/instructions/supplemental/security.md",
+        "tools": "resources/instructions/supplemental/tools.md",
+        "journal": "resources/instructions/supplemental/journal.md",
+        "mentor-journal-instructions": "resources/instructions/supplemental/mentor-journal-instructions.md",
+        "practice-journal-instructions": "resources/instructions/supplemental/practice-journal-instructions.md",
+        "feedback-journal-instructions": "resources/instructions/supplemental/feedback-journal-instructions.md"
+      }
+    }
+  },
+  "agents": {
+    "mentor": {
+      "name": "Mentor",
+      "voice": "marin",
+      "publicDescription": "Mentor guiding students through fundamentals.",
+      "downstreamAgents": [
+        "practice"
+      ],
+      "aiConfiguration": "voice-interactive"
+    },
+    "practice": {
+      "name": "Practice Partner",
+      "voice": "shimmer",
+      "publicDescription": "Practice partner for simulation activities.",
+      "downstreamAgents": [
+        "feedback"
+      ],
+      "aiConfiguration": "voice-interactive"
+    },
+    "feedback": {
+      "name": "Feedback Coach",
+      "voice": "marin",
+      "publicDescription": "Providing feedback on performance.",
+      "downstreamAgents": [],
+      "aiConfiguration": "voice-interactive"
+    },
+    "studentReport": {
+      "name": "Student Report Agent",
+      "publicDescription": "Generates individual student performance reports based on session data.",
+      "type": "backend",
+      "aiConfiguration": "analytics",
+      "temperature": 0.3,
+      "downstreamAgents": [],
+      "toolGroups": [
+        "builtin",
+        "analytics"
+      ],
+      "analyticsConfig": {
+        "type": "student",
+        "runnable": true,
+        "outputPath": "analytics/",
+        "outputFilename": "student_report.md"
+      }
+    },
+    "classAnalytics": {
+      "name": "Class Analytics Agent",
+      "publicDescription": "Generates aggregate class performance analysis from all student reports.",
+      "type": "backend",
+      "aiConfiguration": "analytics",
+      "temperature": 0.3,
+      "downstreamAgents": [],
+      "toolGroups": [
+        "builtin",
+        "analytics"
+      ],
+      "analyticsConfig": {
+        "type": "class",
+        "runnable": true,
+        "outputPath": "class_data/{classId}/",
+        "outputFilename": "class_report.md",
+        "dependsOn": [
+          "studentReport"
+        ]
+      }
+    }
+  },
+  "initialAgent": "mentor",
+  "tools": {
+    "plugins": [
+      "@primer/builtin-plugin",
+      "@primer/slide-plugin"
+    ]
+  },
+  "lastModified": "2026-03-11T08:30:51.107Z"
+}

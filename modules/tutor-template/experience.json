@@ -1,0 +1,151 @@
+{
+  "version": "1.0.1",
+  "hidden": true,
+  "configVersion": 2,
+  "kind": "template",
+  "title": "Tutor Template Experience",
+  "description": "A template for interactive tutoring experiences with a single tutor agent that uses custom components for visualization, practice, and assessment.",
+  "aiConfigurations": {
+    "voice-interactive": {
+      "provider": "openai",
+      "api": "realtime",
+      "model": "gpt-realtime-1.5",
+      "streaming": true,
+      "modalities": [
+        "audio",
+        "text"
+      ],
+      "realtimeSettings": {
+        "silence_duration_ms": 1500,
+        "threshold": 0.7,
+        "prefix_padding_ms": 300,
+        "create_response": true,
+        "interrupt_response": true
+      }
+    },
+    "analytics": {
+      "provider": "anthropic",
+      "api": "responses",
+      "model": "claude-opus-4-6",
+      "streaming": false,
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  "resources": {
+    "scenes": [
+      "resources/scenes/tutor-scene.png"
+    ],
+    "components": [],
+    "instructions": {
+      "agent": {
+        "tutor": "resources/instructions/agent/tutor.md",
+        "studentReport": "resources/instructions/agent/student_report.md",
+        "classAnalytics": "resources/instructions/agent/class_analytics.md"
+      },
+      "supplemental": {
+        "agent": "resources/instructions/supplemental/agent.md",
+        "checklists": "resources/instructions/supplemental/checklists.md",
+        "error-handling": "resources/instructions/supplemental/error-handling.md",
+        "note-tools": "resources/instructions/supplemental/note-tools.md",
+        "scene": "resources/instructions/supplemental/scene.md",
+        "security": "resources/instructions/supplemental/security.md",
+        "tools": "resources/instructions/supplemental/tools.md",
+        "journal": "resources/instructions/supplemental/journal.md",
+        "component-guide": "resources/instructions/supplemental/component-guide.md",
+        "tutor-journal-instructions": "resources/instructions/supplemental/tutor-journal-instructions.md"
+      }
+    }
+  },
+  "agents": {
+    "tutor": {
+      "name": "Tutor",
+      "voice": "marin",
+      "publicDescription": "An interactive tutor guiding students through hands-on learning with visual components.",
+      "downstreamAgents": [],
+      "aiConfiguration": "voice-interactive",
+      "toolSets": [
+        "default"
+      ]
+    },
+    "studentReport": {
+      "name": "Student Report Agent",
+      "publicDescription": "Generates individual student performance reports based on session data.",
+      "type": "backend",
+      "aiConfiguration": "analytics",
+      "temperature": 0.3,
+      "downstreamAgents": [],
+      "toolSets": [
+        "analytics"
+      ],
+      "analyticsConfig": {
+        "type": "student",
+        "runnable": true,
+        "outputPath": "analytics/",
+        "outputFilename": "student_report.md"
+      }
+    },
+    "classAnalytics": {
+      "name": "Class Analytics Agent",
+      "publicDescription": "Generates aggregate class performance analysis from all student reports.",
+      "type": "backend",
+      "aiConfiguration": "analytics",
+      "temperature": 0.3,
+      "downstreamAgents": [],
+      "toolSets": [
+        "analytics"
+      ],
+      "analyticsConfig": {
+        "type": "class",
+        "runnable": true,
+        "outputPath": "class_data/{classId}/",
+        "outputFilename": "class_report.md",
+        "dependsOn": [
+          "studentReport"
+        ]
+      }
+    }
+  },
+  "initialAgent": "tutor",
+  "toolSets": {
+    "default": [
+      "agent",
+      "artifact",
+      "celebrate",
+      "checklist",
+      "customComponent",
+      "file",
+      "information",
+      "note",
+      "observe",
+      "present",
+      "research",
+      "scene",
+      "sessionEvent",
+      "slide",
+      "sound",
+      "toast"
+    ],
+    "analytics": [
+      "scene",
+      "information",
+      "file",
+      "artifact",
+      "checklist",
+      "agent",
+      "toast",
+      "observe",
+      "present",
+      "slide",
+      "note",
+      "listClassSessions",
+      "readSessionFile",
+      "writeSessionFile",
+      "listSessionFiles",
+      "readClassData",
+      "writeClassData",
+      "batchReadSessionFiles"
+    ]
+  }
+}

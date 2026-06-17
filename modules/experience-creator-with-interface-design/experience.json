@@ -1,0 +1,278 @@
+{
+  "version": "0.2.0",
+  "hidden": true,
+  "kind": "meta",
+  "title": "Experience Creator with Interface Design",
+  "created": "2026-03-05T00:00:00.000Z",
+  "lastModified": "2026-03-11T15:30:00.000Z",
+  "author": "Primer",
+  "authorEmail": "system@primerexperience.org",
+  "description": "Interviews an educator to create interactive, component-heavy Primer Experiences for science, math, and other hands-on subjects.",
+  "usesComponents": true,
+  "requires": ["tutor-template", "lab-template"],
+  "aiConfigurations": {
+    "voice-interactive": {
+      "provider": "openai",
+      "api": "realtime",
+      "model": "gpt-realtime-1.5",
+      "streaming": true,
+      "modalities": [
+        "audio",
+        "text"
+      ],
+      "realtimeSettings": {
+        "silence_duration_ms": 1500,
+        "threshold": 0.7,
+        "prefix_padding_ms": 300,
+        "create_response": true,
+        "interrupt_response": true
+      }
+    },
+    "instruction-follow": {
+      "provider": "anthropic",
+      "api": "responses",
+      "model": "claude-opus-4-6",
+      "streaming": false,
+      "modalities": [
+        "text"
+      ]
+    },
+    "interface-designer": {
+      "provider": "anthropic",
+      "api": "responses",
+      "model": "claude-opus-4-6",
+      "streaming": false,
+      "modalities": [
+        "text"
+      ]
+    },
+    "image-generation": {
+      "provider": "google",
+      "api": "generate",
+      "model": "gpt-4o",
+      "imageModel": "gemini-3.1-flash-image-preview",
+      "streaming": false,
+      "modalities": [
+        "text",
+        "image"
+      ]
+    }
+  },
+  "resources": {
+    "scenes": [
+      "resources/scenes/creator_welcome.jpg",
+      "resources/scenes/creator_constructing_experience.jpg",
+      "resources/scenes/creator_creating_images.jpg"
+    ],
+    "sounds": [
+      "resources/sounds/confirmation_1.mp3",
+      "resources/sounds/confirmation_2.mp3",
+      "resources/sounds/confirmation_3.mp3",
+      "resources/sounds/error_1.mp3"
+    ],
+    "components": [
+      {
+        "id": "color-wheel-explorer",
+        "name": "Color Wheel Explorer",
+        "file": "resources/components/color-wheel-explorer.jsx",
+        "css": "resources/components/color-wheel-explorer.css",
+        "description": "Interactive color wheel for exploring complementary, analogous, and triadic color schemes"
+      },
+      {
+        "id": "poster-design-studio",
+        "name": "Poster Design Studio",
+        "file": "resources/components/poster-design-studio.jsx",
+        "css": "resources/components/poster-design-studio.css",
+        "description": "Design canvas for creating posters with draggable elements, color controls, and typography customization"
+      },
+      {
+        "id": "orbital-simulator",
+        "name": "Orbital Simulator",
+        "file": "resources/components/orbital-simulator.jsx",
+        "css": "resources/components/orbital-simulator.css",
+        "description": "Interactive solar system simulation for exploring orbital mechanics, Kepler's laws, and gravitational relationships"
+      }
+    ],
+    "artifacts": [
+      {
+        "name": "Intake Checklist",
+        "type": "checklist",
+        "file": "resources/artifacts/intake-checklist.md",
+        "agents": [
+          "intake"
+        ],
+        "metadata": {
+          "description": "Private checklist for Intake agent behavior management",
+          "tags": [
+            "private:intake"
+          ],
+          "presentation": {
+            "type": "checklist",
+            "options": {}
+          }
+        }
+      },
+      {
+        "name": "Casting Director Checklist",
+        "type": "checklist",
+        "file": "resources/artifacts/casting-director-checklist.md",
+        "agents": [
+          "intake"
+        ],
+        "metadata": {
+          "description": "Private checklist for Casting Director agent behavior management",
+          "tags": [
+            "private:casting-director"
+          ],
+          "presentation": {
+            "type": "checklist",
+            "options": {}
+          }
+        }
+      }
+    ],
+    "instructions": {
+      "agent": {
+        "intake": "resources/instructions/agent/intake.md",
+        "design-agent": "resources/instructions/agent/design-agent.md",
+        "interface-designer": "resources/instructions/agent/interface-designer.md",
+        "casting-director": "resources/instructions/agent/casting-director.md",
+        "image-generation-agent": "resources/instructions/agent/image-generation-agent.md",
+        "experience-builder": "resources/instructions/agent/experience-builder.md",
+        "hal": "resources/instructions/agent/hal.md"
+      },
+      "supplemental": {
+        "checklists": "resources/instructions/supplemental/checklists.md",
+        "agent": "resources/instructions/supplemental/agent.md",
+        "scene": "resources/instructions/supplemental/scene.md",
+        "security": "resources/instructions/supplemental/security.md",
+        "tools": "resources/instructions/supplemental/tools.md",
+        "note-tools": "resources/instructions/supplemental/note-tools.md",
+        "matter-compiler-guide": "resources/instructions/supplemental/matter-compiler-guide.md",
+        "process": "resources/instructions/supplemental/process.md",
+        "templates": "resources/instructions/supplemental/templates.md",
+        "components": "resources/instructions/supplemental/components.md",
+        "component-guide": "resources/instructions/supplemental/component-guide.md",
+        "voices": "resources/instructions/supplemental/voices.md",
+        "journal": "resources/instructions/supplemental/journal.md",
+        "session-events": "resources/instructions/supplemental/session-events.md"
+      }
+    }
+  },
+  "agents": {
+    "intake": {
+      "name": "Intake",
+      "voice": "ballad",
+      "publicDescription": "An AI interviewing educators about their needs for interactive learning experiences.",
+      "downstreamAgents": [],
+      "type": "frontend",
+      "aiConfiguration": "voice-interactive"
+    },
+    "design-agent": {
+      "name": "Design Agent",
+      "publicDescription": "An AI that creates comprehensive design documents with component specifications for interactive educational experiences.",
+      "type": "backend",
+      "temperature": 0.8,
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow"
+    },
+    "interface-designer": {
+      "name": "Interface Designer",
+      "publicDescription": "An AI that builds custom interactive React components for educational experiences.",
+      "type": "backend",
+      "temperature": 0.7,
+      "downstreamAgents": [],
+      "aiConfiguration": "interface-designer",
+      "maximumToolCalls": 75,
+      "toolSets": [
+        "backend-default"
+      ]
+    },
+    "casting-director": {
+      "name": "Casting Director",
+      "publicDescription": "An AI that creates agent prompt artifacts by casting roles, enhancing templates, and inserting component instructions.",
+      "type": "backend",
+      "temperature": 0.8,
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow"
+    },
+    "image-generation-agent": {
+      "name": "Image Generation Agent",
+      "publicDescription": "An AI that creates visual assets for educational experiences.",
+      "type": "backend",
+      "temperature": 0.8,
+      "downstreamAgents": [],
+      "aiConfiguration": "image-generation"
+    },
+    "experience-builder": {
+      "name": "Experience Builder",
+      "publicDescription": "An AI that builds actual educational experiences with interactive components using matter compiler tools.",
+      "type": "backend",
+      "temperature": 0.6,
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow"
+    },
+    "hal": {
+      "name": "HAL",
+      "voice": "ash",
+      "publicDescription": "A debugger.",
+      "type": "frontend",
+      "temperature": 0.6,
+      "downstreamAgents": [],
+      "aiConfiguration": "voice-interactive"
+    }
+  },
+  "initialAgent": "intake",
+  "toolSets": {
+    "backend-default": [
+      "scene",
+      "information",
+      "file",
+      "artifact",
+      "checklist",
+      "agent",
+      "toast",
+      "observe",
+      "present",
+      "slide",
+      "createExperience",
+      "copyTemplate",
+      "createDirectory",
+      "createFile",
+      "deleteDirectory",
+      "deleteFile",
+      "moveFile",
+      "moveDirectory",
+      "listResources",
+      "getResourceContent",
+      "deployArtifact",
+      "validateComponent",
+      "generateComponentStyles",
+      "getTemplateAgentInstructions",
+      "listTemplateExperiences",
+      "modifyExperience",
+      "modifyAgent",
+      "modifyScene",
+      "getExperience",
+      "createAgentPrompt",
+      "createSupplementalFile",
+      "addSound",
+      "listAgentPrompts",
+      "getAgentPrompt",
+      "listSupplementalFiles",
+      "getSupplementalFile",
+      "generateImages"
+    ]
+  },
+  "tools": {
+    "plugins": [
+      "@primer/builtin-plugin",
+      "@primer/celebrate-plugin",
+      "@primer/slide-plugin",
+      "@primer/sound-plugin",
+      "@primer/web-search-plugin",
+      "@primer/session-plugin",
+      "@primer/custom-component-plugin"
+    ]
+  }
+}

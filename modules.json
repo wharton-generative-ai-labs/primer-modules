@@ -8,41 +8,41 @@
       "kind": "bundled",
       "author": "Ethan Mollick",
       "requires": [],
-      "sha256": "54562e78206e0671b3373f54f1d3a2b97f6bfd2136f64aa8f8ddc4960983d2e8",
+      "sha256": "",
       "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/elevator-pitching-example.zip"
     },
-    "experience-creator": {
-      "title": "Experience Creator",
+    "experience-creator-with-workflows": {
+      "title": "Experience Creator (With Workflows)",
       "description": "Interviews an educator to create a Primer Experience.",
-      "version": "0.16.0",
+      "version": "0.17.0",
       "kind": "meta",
       "author": "Lilach Mollick",
       "requires": [
-        "roleplay-template",
-        "teachback-template"
+        "roleplay-template-with-workflows",
+        "teachback-template-with-workflows"
       ],
-      "sha256": "42bc2ee14bd639168fb789ccbb096bb9871f90018608d90c513745270e0827e7",
-      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/experience-creator.zip"
+      "sha256": "",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/experience-creator-with-workflows.zip"
     },
-    "roleplay-template": {
-      "title": "Roleplay Template Experience",
+    "roleplay-template-with-workflows": {
+      "title": "Roleplay Template Experience (With Workflows)",
       "description": "A template roleplay experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
-      "version": "1.0.9",
+      "version": "1.1.0",
       "kind": "template",
       "author": "",
       "requires": [],
-      "sha256": "302f82cc8c761b451b02df22ed5c6d82708f72e73b39432bfcf3833a35f87893",
-      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/roleplay-template.zip"
+      "sha256": "",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/roleplay-template-with-workflows.zip"
     },
-    "teachback-template": {
-      "title": "Teachback Template Experience",
+    "teachback-template-with-workflows": {
+      "title": "Teachback Template Experience (With Workflows)",
       "description": "A template teachback experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
       "version": "1.0.9",
       "kind": "template",
       "author": "",
       "requires": [],
-      "sha256": "d0d0c0c3453fd519a183924b3c8d3e302da85b4531b68955d64f539590af07fa",
-      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/teachback-template.zip"
+      "sha256": "",
+      "url": "https://github.com/wharton-generative-ai-labs/primer-modules/releases/latest/download/teachback-template-with-workflows.zip"
     }
   }
 }

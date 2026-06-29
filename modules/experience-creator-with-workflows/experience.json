@@ -1,0 +1,514 @@
+{
+  "version": "0.17.0",
+  "configVersion": 2,
+  "kind": "meta",
+  "title": "Experience Creator (With Workflows)",
+  "created": "2025-10-10T10:56:57.953Z",
+  "lastModified": "2026-05-11T00:00:00.000Z",
+  "author": "Lilach Mollick",
+  "authorEmail": "system@primerexperience.org",
+  "description": "Interviews an educator to create a Primer Experience.",
+  "requires": [
+    "roleplay-template-with-workflows",
+    "teachback-template-with-workflows"
+  ],
+  "autoTranscript": true,
+  "aiConfigurations": {
+    "voice-interactive": {
+      "provider": "openai",
+      "api": "realtime",
+      "model": "gpt-realtime-1.5",
+      "streaming": true,
+      "modalities": [
+        "audio",
+        "text"
+      ],
+      "realtimeSettings": {
+        "silence_duration_ms": 1500,
+        "threshold": 0.7,
+        "prefix_padding_ms": 300,
+        "create_response": true,
+        "interrupt_response": true
+      }
+    },
+    "instruction-follow": {
+      "provider": "openai",
+      "api": "responses",
+      "model": "gpt-5",
+      "streaming": false,
+      "modalities": [
+        "text"
+      ]
+    },
+    "instruction-follow-fast": {
+      "provider": "openai",
+      "api": "responses",
+      "model": "gpt-4o",
+      "streaming": false,
+      "modalities": [
+        "text"
+      ]
+    },
+    "image-generation": {
+      "provider": "openai",
+      "api": "responses",
+      "model": "gpt-5",
+      "streaming": false,
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  "resources": {
+    "scenes": [
+      "resources/scenes/creator_welcome.jpg",
+      "resources/scenes/creator_constructing_experience.jpg",
+      "resources/scenes/creator_creating_images.jpg"
+    ],
+    "sounds": [
+      "resources/sounds/confirmation_1.mp3",
+      "resources/sounds/confirmation_2.mp3",
+      "resources/sounds/confirmation_3.mp3",
+      "resources/sounds/error_1.mp3"
+    ],
+    "artifacts": [
+      {
+        "name": "Intake Checklist",
+        "type": "checklist",
+        "file": "resources/artifacts/intake-checklist.md",
+        "agents": [
+          "intake"
+        ],
+        "metadata": {
+          "description": "Private checklist for Intake agent behavior management",
+          "tags": [
+            "private:intake"
+          ],
+          "presentation": {
+            "type": "checklist",
+            "options": {}
+          }
+        }
+      },
+      {
+        "name": "Casting Director Checklist",
+        "type": "checklist",
+        "file": "resources/artifacts/casting-director-checklist.md",
+        "agents": [
+          "casting-director"
+        ],
+        "metadata": {
+          "description": "Private checklist for Casting Director agent behavior management",
+          "tags": [
+            "private:casting-director"
+          ],
+          "presentation": {
+            "type": "checklist",
+            "options": {}
+          }
+        }
+      },
+      {
+        "name": "Design Progress",
+        "type": "checklist",
+        "file": "resources/artifacts/design-checklist.md",
+        "metadata": {
+          "description": "Public checklist driving the intake-phase design progress. The orchestrator ticks items via the `checklist` tool as the Design Agent runs.",
+          "tags": [
+            "phase:intake"
+          ],
+          "presentation": {
+            "type": "checklist",
+            "options": {}
+          }
+        }
+      },
+      {
+        "name": "Build Progress",
+        "type": "checklist",
+        "file": "resources/artifacts/build-checklist.md",
+        "metadata": {
+          "description": "Public checklist driving the build-phase surface. The orchestrator ticks items via the `checklist` tool as backend subagents return.",
+          "tags": [
+            "phase:build"
+          ],
+          "presentation": {
+            "type": "checklist",
+            "options": {}
+          }
+        }
+      },
+      {
+        "name": "Built Experience",
+        "type": "markdown",
+        "file": "resources/artifacts/built-experience-id.md",
+        "metadata": {
+          "description": "Holds the freshly-built experienceId after the Experience Builder returns. Read by the result-phase surface to render the deliverable tile.",
+          "tags": [
+            "result:experience-id"
+          ]
+        }
+      }
+    ],
+    "instructions": {
+      "agent": {
+        "intake": "resources/instructions/agent/intake.md",
+        "design-agent": "resources/instructions/agent/design-agent.md",
+        "casting-director": "resources/instructions/agent/casting-director.md",
+        "image-generation-agent": "resources/instructions/agent/image-generation-agent.md",
+        "experience-builder": "resources/instructions/agent/experience-builder.md",
+        "hal": "resources/instructions/agent/hal.md",
+        "test": "resources/instructions/agent/test.md"
+      },
+      "supplemental": {
+        "checklists": "resources/instructions/supplemental/checklists.md",
+        "agent": "resources/instructions/supplemental/agent.md",
+        "scene": "resources/instructions/supplemental/scene.md",
+        "security": "resources/instructions/supplemental/security.md",
+        "tools": "resources/instructions/supplemental/tools.md",
+        "note-tools": "resources/instructions/supplemental/note-tools.md",
+        "matter-compiler-guide": "resources/instructions/supplemental/matter-compiler-guide.md",
+        "process": "resources/instructions/supplemental/process.md",
+        "templates": "resources/instructions/supplemental/templates.md",
+        "voices": "resources/instructions/supplemental/voices.md",
+        "journal": "resources/instructions/supplemental/journal.md",
+        "session-events": "resources/instructions/supplemental/session-events.md"
+      }
+    }
+  },
+  "agents": {
+    "intake": {
+      "name": "Intake",
+      "voice": "ballad",
+      "publicDescription": "An AI interviewing educators about their needs.",
+      "downstreamAgents": [],
+      "type": "frontend",
+      "aiConfiguration": "voice-interactive",
+      "toolSets": [
+        "frontend-default"
+      ]
+    },
+    "design-agent": {
+      "name": "Design Agent",
+      "publicDescription": "An AI that creates comprehensive design documents for educational experiences.",
+      "delegationContract": "Inputs:\n- `artifactIds`: REQUIRED \u2014 pass the `conversation_transcript` artifact id (full verbatim intake conversation). Also include any educator-uploaded source materials.\n- `taskDescription`: short, e.g. \"Create a detailed design document for a Roleplay simulation based on the conversation transcript.\"\n\nReturns TWO artifact ids: (1) the educator-facing `Design Document` artifact, shown in the `design` review phase; and (2) the machine-only `Phases Configuration` artifact (tags: ['phases-configuration']) \u2014 pass this to the Experience Builder so it can apply workflow phases. Note both.\n\nFor revisions, re-delegate with the same shape plus a taskDescription describing the requested changes.",
+      "type": "backend",
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow",
+      "toolSets": [
+        "design-agent-tools"
+      ]
+    },
+    "casting-director": {
+      "name": "Casting Director",
+      "publicDescription": "An AI that creates agent prompt artifacts by casting roles and enhancing templates.",
+      "delegationContract": "Inputs:\n- `artifactIds`: REQUIRED \u2014 pass the design-document artifact id. The Casting Director reads the template type (Roleplay or Teachback) from the design document and loads the matching character templates.\n- `taskDescription`: short, e.g. \"Create character prompts based on the design document.\"\n\nReturns: character-prompt artifact ids (one per character/role, typically mentor, practice, feedback). Hold onto these \u2014 the Experience Builder needs them.\n\nDoes NOT overwrite templates; it publishes new artifacts customized for this experience.",
+      "type": "backend",
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow-fast",
+      "toolSets": [
+        "backend-subagent-tools"
+      ]
+    },
+    "image-generation-agent": {
+      "name": "Image Generation Agent",
+      "publicDescription": "An AI that creates visual assets for educational experiences using OpenAI gpt-image-2.",
+      "delegationContract": "Inputs:\n- `artifactIds`: REQUIRED \u2014 pass the design-document artifact id AND all character-prompt artifact ids returned by the Casting Director.\n- `imageNames`: REQUIRED \u2014 array of names for the images you want generated, in the order they appear in the design document (typically `[\"mentor\", \"practice\", \"feedback\"]`).\n- `taskDescription`: short, e.g. \"Generate the three scene images for the design.\"\n\nReturns: image artifact ids (one per name in `imageNames`). Hold these \u2014 the Experience Builder needs them.",
+      "type": "backend",
+      "downstreamAgents": [],
+      "aiConfiguration": "image-generation",
+      "toolSets": [
+        "backend-subagent-tools"
+      ]
+    },
+    "experience-builder": {
+      "name": "Experience Builder",
+      "publicDescription": "An AI that builds actual educational experiences using matter compiler tools.",
+      "delegationContract": "Inputs:\n- `artifactIds`: REQUIRED \u2014 must include the design-document artifact id, the phases-configuration artifact id (tags: ['phases-configuration'] \u2014 the builder JSON.parses its content to apply workflow phases), the brief summary artifact id, ALL character-prompt artifact ids from the Casting Director, and ALL image artifact ids from the Image Generation Agent. **Format: artifact ids are SLUGS** (e.g. `mentor_prompt`, `mentor_scene`, `design_document`, `phases_configuration`), copied verbatim from `artifact({ action: 'list' })`. They are NOT UUIDs \u2014 the only UUIDs in this flow are template ids passed to `copyTemplate`.\n- `taskDescription`: REQUIRED \u2014 must mention the template type in plain English (\"Build a Roleplay experience\" or \"Build a Teachback experience\") AND include the educator's name and email so the builder can set them as the experience author. Example: \"Build a Roleplay experience. The educator is Jane Smith (jane@university.edu).\"\n\nReturns: a deployable experienceId. The platform writes this id into the `Built Experience` artifact automatically when the experience is provisioned \u2014 do not modify that artifact yourself.",
+      "type": "backend",
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow-fast",
+      "toolSets": [
+        "backend-subagent-tools"
+      ]
+    },
+    "hal": {
+      "name": "HAL",
+      "voice": "ash",
+      "publicDescription": "A debugger.",
+      "type": "frontend",
+      "temperature": 0.6,
+      "downstreamAgents": [],
+      "aiConfiguration": "voice-interactive",
+      "toolSets": [
+        "frontend-default"
+      ]
+    },
+    "test": {
+      "name": "Test Agent",
+      "publicDescription": "An AI that tests system functionality.",
+      "type": "backend",
+      "downstreamAgents": [],
+      "aiConfiguration": "instruction-follow",
+      "toolSets": [
+        "minimal"
+      ]
+    }
+  },
+  "initialAgent": "intake",
+  "initialWorkflowPhase": "intake",
+  "workflowPhases": [
+    {
+      "id": "intake",
+      "title": "Tell us about your class",
+      "heading": "Let's start by defining your goals.",
+      "description": "Interview the educator about their class, learners, and goals.",
+      "initialAgent": "intake",
+      "allowedDelegates": [
+        "design-agent"
+      ],
+      "navLabels": {
+        "nextLabel": "Review Goals"
+      },
+      "objectives": [
+        {
+          "id": "domain-and-level",
+          "description": "Confirm domain, learner level, and the target competency."
+        },
+        {
+          "id": "template-pick",
+          "description": "Decide which template structure (Roleplay or Teachback) fits."
+        },
+        {
+          "id": "briefing-captured",
+          "description": "Capture the educator's why \u2014 one short sentence on what success looks like for these learners."
+        },
+        {
+          "id": "lesson-plan-created",
+          "description": "Intake agent created the Lesson Plan artifact summarising goals.",
+          "satisfiedBy": {
+            "kind": "delegateSuccess",
+            "agentType": "design-agent"
+          }
+        }
+      ],
+      "promptFragments": {
+        "coldStart": "First entry. Welcome the educator, ask what they want to build, and probe until you have domain, learner level, a template choice (Roleplay or Teachback), and a one-paragraph briefing. The platform auto-maintains the `conversation_transcript` artifact (full verbatim conversation) \u2014 reference it by id when delegating; do not try to create or update it yourself.\n\nGate 1 \u2014 advancement (READ THE `Advancement gates` SECTION OF YOUR PROMPT). After you have presented the recommended template + game flow and the educator responds with an affirmative trigger phrase (\"yes\", \"sounds good\", \"go ahead\", \"that works\", \"looks good\", etc.), IN THE SAME response turn: (1) create the Lesson Plan artifact, (2) tick the Design Progress checklist, (3) call `agent({ action: 'delegate', agentType: 'design-agent', artifactIds: ['conversation_transcript', ...any uploaded artifact ids] })`. When that delegate returns the design-document + phases-configuration artifact ids, IN THE SAME response turn call `workflowPhase({ action: 'nextPhase' })` \u2014 this lands on the `lesson-plan` phase where the educator reviews their goals. Never say \"I'll move ahead\", \"taking it from here\", \"getting the design rolling\", or any other forward-motion phrase without the accompanying tool call going out the same turn \u2014 that is the most common stall in this experience.",
+        "reentry": "The educator has come back to refine their goals. The `conversation_transcript` artifact has the full history of what was already discussed \u2014 reference it by id when re-delegating; do not re-interview from scratch. Ask what specifically they want to change, then probe until you have an updated briefing. The system message will include a `WORKFLOW_PHASE_RESET` line if downstream approvals (e.g. design) were cleared \u2014 that means you must re-create the Lesson Plan artifact with the updated goals, then re-delegate to the design-agent with the updated transcript once the educator is satisfied here."
+      }
+    },
+    {
+      "id": "lesson-plan",
+      "title": "Review your goals",
+      "heading": "Let's start by defining your goals.",
+      "description": "Show the educator the lesson plan summarising their goals and let them confirm before moving to design.",
+      "initialAgent": "intake",
+      "reentryAgent": "intake",
+      "requireEducatorAdvance": true,
+      "resetOnReentry": true,
+      "allowedDelegates": [
+        "design-agent"
+      ],
+      "navLabels": {
+        "nextLabel": "Design Experience"
+      },
+      "objectives": [
+        {
+          "id": "lesson-plan-shown",
+          "description": "Lesson Plan artifact surfaced to the educator."
+        },
+        {
+          "id": "lesson-plan-confirmed",
+          "description": "Educator confirms the goals summary is accurate."
+        }
+      ],
+      "promptFragments": {
+        "coldStart": "On phase entry, show the Lesson Plan artifact in the document panel: call `slide({ action: 'showArtifact', artifactId: 'lesson_plan' })`. Then briefly walk the educator through it in one or two sentences \u2014 do NOT read it aloud in full.\n\nAsk: \"Does this capture your goals, or would you like to adjust anything before we move on to the design?\"\n\nGate \u2014 when the educator approves with any trigger phrase (\"yes\", \"looks good\", \"go ahead\", \"that works\", etc.), IN THE SAME response turn call `workflowPhase({ action: 'nextPhase' })` and tell the educator briefly to click the \"Design Experience\" button at the bottom of the document panel. This phase declares `requireEducatorAdvance: true` \u2014 your `nextPhase` call marks it complete but the educator's click drives the actual move into design.\n\nIf the educator wants changes: update the Lesson Plan artifact via `artifact({ action: 'edit', id: 'lesson_plan', ... })` with the corrected goals, re-show it with `slide({ action: 'showArtifact', artifactId: 'lesson_plan' })`, then wait for re-confirmation. Do NOT re-delegate to design-agent here \u2014 the design-agent runs after the educator confirms.",
+        "reentry": "The educator returned to revisit their goals. Re-display the current Lesson Plan: call `slide({ action: 'showArtifact', artifactId: 'lesson_plan' })`. Ask what they want to change. If they request edits, update the artifact and re-show it. When they confirm, call `workflowPhase({ action: 'nextPhase' })` and prompt them to click \"Design Experience\"."
+      }
+    },
+    {
+      "id": "design",
+      "title": "Review the design",
+      "heading": "Now let's design the experience.",
+      "description": "Show the educator the design document the Design Agent produced and iterate until they approve.",
+      "initialAgent": "intake",
+      "reentryAgent": "intake",
+      "requireEducatorAdvance": true,
+      "resetOnReentry": true,
+      "allowedDelegates": [
+        "design-agent"
+      ],
+      "navLabels": {
+        "backLabel": "Review Goals",
+        "nextLabel": "Build Experience"
+      },
+      "objectives": [
+        {
+          "id": "design-shown",
+          "description": "Surface the design document to the educator."
+        },
+        {
+          "id": "design-approved",
+          "description": "Capture explicit approval (or revisions and a re-design)."
+        }
+      ],
+      "promptFragments": {
+        "coldStart": "On phase entry, FIRST verify which artifact you'll show. Call `artifact({ action: 'list' })` and look for an artifact whose name is exactly \"Design Document\". NEVER show `conversation_transcript`, `design_process_notes`, `design_progress`, or any other internal artifact to the educator \u2014 only educator-facing artifacts (Design Document, Built Experience).\n\nCASE A \u2014 Design Document EXISTS (the normal path; intake delegated successfully):\n\n1. Call `slide({ action: 'showArtifact', artifactId: '<design-document id>' })` using the id from your list call.\n2. Walk the educator through key sections briefly in chat.\n3. Ask: \"Does this match what you had in mind, or would you like changes?\"\n4. WAIT for their response. Do NOT re-delegate to design-agent unless the educator EXPLICITLY requests changes.\n\nDo NOT delegate to `design-agent` on phase entry when the design document already exists \u2014 a fresh delegate would re-do the work and produce duplicate artifacts. Only re-delegate if the educator asks for revisions, and only with a taskDescription that names the specific changes they requested.\n\nCASE B \u2014 Design Document MISSING (intake delegation didn't happen or was incomplete):\n\n1. Tell the educator briefly: \"Just a moment \u2014 I'm drafting the design now.\"\n2. Delegate to `design-agent` IMMEDIATELY in the same response turn (see the Say-do principle), passing the `conversation_transcript` artifact id (plus any educator-uploaded artifact ids) via `artifactIds`. Note the design-document id it returns.\n3. Once it returns, proceed with CASE A from step 1 (display + ask for approval).\n4. Do NOT show `conversation_transcript` or any other internal artifact to the educator while waiting.\n\nGate 2 \u2014 advancement (READ THE `Advancement gates` SECTION OF YOUR PROMPT). When the educator approves with any trigger phrase (\"yes\", \"this matches\", \"looks good\", \"sounds great\", etc.), IN THE SAME response turn call `workflowPhase({ action: 'nextPhase' })` AND tell the educator briefly to click the \"Build Experience\" button at the bottom of the document panel. This phase declares `requireEducatorAdvance: true`, so your `nextPhase` call marks the phase complete but does NOT auto-advance \u2014 the educator's click drives the actual move into build. Never say \"moving you forward\" or \"all set\" without the `workflowPhase nextPhase` tool call going out the same turn.\n\nIf the educator says they want to go back or change their goals, let them know they can click the \"\u2190 Review Goals\" button at the bottom of the design document panel to return to the goals step.",
+        "reentry": "The educator returned to revisit the design. Re-display the current design and ask what they want to change."
+      }
+    },
+    {
+      "id": "build",
+      "title": "Building your experience",
+      "heading": "Your experience is being built.",
+      "description": "Casting Director, Image Generation, and Experience Builder run. The orchestrator ticks the public Build Progress checklist as each subagent returns.",
+      "mode": "build",
+      "buildConfig": {
+        "title": "Your experience is being built.",
+        "subtitle": "Please don't close this tab."
+      },
+      "initialAgent": "intake",
+      "resetOnReentry": true,
+      "allowedDelegates": [
+        "casting-director",
+        "image-generation-agent",
+        "experience-builder"
+      ],
+      "objectives": [
+        {
+          "id": "characters-cast",
+          "description": "Casting Director produced character prompt artifacts.",
+          "satisfiedBy": {
+            "kind": "delegateSuccess",
+            "agentType": "casting-director"
+          }
+        },
+        {
+          "id": "images-rendered",
+          "description": "Image Generation produced the three scene images.",
+          "satisfiedBy": {
+            "kind": "delegateSuccess",
+            "agentType": "image-generation-agent"
+          }
+        },
+        {
+          "id": "experience-built",
+          "description": "Experience Builder produced a deployable experienceId.",
+          "satisfiedBy": {
+            "kind": "artifactPopulated",
+            "slug": "built_experience"
+          }
+        }
+      ],
+      "promptFragments": {
+        "coldStart": "Drive the public `Build Progress` checklist (tags: ['phase:build']) as you work. Sequence:\n1. `Initiating build`.\n2. Delegate to `casting-director` with the design-document artifact id. Then `Creating character prompts`.\n3. Delegate to `image-generation-agent` with the design-document artifact id. Then `Generating visual assets`.\n4. Delegate to `experience-builder`. MUST include the design-document artifact id in `artifactIds` alongside the summary, character prompt ids, and image ids \u2014 the builder reads the Workflow Phases JSON block from the design doc. When it returns a valid experienceId, tick `Building the experience`. The experience-builder calls `publishBuiltExperience` as its final tool call after deploy + verify succeed; that's what writes the slug into the `Built Experience` artifact. Do NOT modify that artifact yourself, and do NOT advance until the builder returns a valid `experienceId`.\n5. Final verification, then `Applying final polish`.\nGate 3 \u2014 advancement (READ THE `Advancement gates` SECTION OF YOUR PROMPT). Do not advance until the Experience Builder reports a valid `experienceId`. When that response lands, IN THE SAME response turn tick the remaining checklist items (`Building the experience`, `Applying final polish`) and call `workflowPhase({ action: 'nextPhase' })`. This phase is non-interactive (`mode: 'build'`) \u2014 no narration, no chat. The transition to `handoff` advances atomically once you call `nextPhase`.\n\nArtifact id format \u2014 read this before delegating: pass the artifact ids returned by `artifact({ action: 'list' })` VERBATIM. They are slugs (e.g. `mentor_prompt`, `practice_prompt`, `feedback_prompt`, `mentor_scene`, `practice_scene`, `feedback_scene`, `design_document`, `phases_configuration`). They are NOT UUIDs. Do not reformat, hash, or invent new ids \u2014 copy the `id` field from the list response unchanged. UUIDs only appear for template ids (used in `copyTemplate`); never for artifacts.\n\nNote: this phase declares `resetOnReentry`. If the educator navigates back to design or intake and changes anything, your build approvals are cleared and you'll re-enter here with a `WORKFLOW_PHASE_RESET: build` notice. When that happens, re-run this entire sequence from scratch \u2014 re-delegate to casting-director, image-generation-agent, and experience-builder. The platform overwrites the `Built Experience` artifact with the new id when the rebuild succeeds.",
+        "reentry": "WORKFLOW_PHASE_RESET fired for `build` \u2014 your previous build artifacts are stale. Repeat the full sequence: (1) re-delegate to casting-director with the (possibly revised) design-document id, (2) re-delegate to image-generation-agent, (3) re-delegate to experience-builder with the updated artifactIds. The builder re-publishes the `Built Experience` artifact via `publishBuiltExperience` once the rebuild verifies. Drive the `Build Progress` checklist as before. Do not narrate to chat \u2014 the user has no chat surface in this phase."
+      }
+    },
+    {
+      "id": "handoff",
+      "title": "Try it out",
+      "heading": "Your experience is ready!",
+      "description": "Present the generated experience to the educator. The result-phase surface renders the tile from the `Built Experience` artifact written during the build phase.",
+      "mode": "result",
+      "resultConfig": {
+        "title": "Your experience is ready!",
+        "subtitle": "You can now play the experience and share it with students.",
+        "ctaLabel": "Play Experience",
+        "ctaTarget": "play-built"
+      },
+      "initialAgent": "intake",
+      "reentryAgent": "intake",
+      "allowedDelegates": [],
+      "objectives": [
+        {
+          "id": "link-presented",
+          "description": "Educator sees the experienceId / play link."
+        },
+        {
+          "id": "expectations-set",
+          "description": "Educator knows the duration, the three phases, and what their students will do."
+        }
+      ],
+      "promptFragments": {
+        "coldStart": "Build is done. Stay quiet unless the educator initiates further conversation. When ready to wrap up, call `finishExperience({ reason: \"<one short sentence>\" })`.",
+        "afterSkip": "The educator jumped ahead before the build finished. The `Built Experience` artifact is empty, so the result tile renders a 'Waiting for build\u2026' placeholder until the build completes."
+      }
+    }
+  ],
+  "toolSets": {
+    "design-agent-tools": [
+      "scene",
+      "file",
+      "artifact",
+      "checklist",
+      "observe",
+      "workflowPhase",
+      "finishExperience",
+      "copyTemplate",
+      "createDirectory",
+      "createFile",
+      "deleteDirectory",
+      "deleteFile",
+      "moveFile",
+      "moveDirectory",
+      "listResources",
+      "getResourceContent",
+      "deployArtifact",
+      "validateComponent",
+      "generateComponentStyles",
+      "getTemplateAgentInstructions",
+      "listTemplateExperiences",
+      "modifyExperience",
+      "modifyAgent",
+      "modifyScene",
+      "getExperience",
+      "createAgentPrompt",
+      "createSupplementalFile",
+      "addSound",
+      "listAgentPrompts",
+      "getAgentPrompt",
+      "listSupplementalFiles",
+      "getSupplementalFile",
+      "generateImages"
+    ],
+    "backend-subagent-tools": [
+      "scene",
+      "file",
+      "artifact",
+      "checklist",
+      "observe",
+      "workflowPhase",
+      "finishExperience",
+      "copyTemplate",
+      "createDirectory",
+      "createFile",
+      "deleteDirectory",
+      "deleteFile",
+      "moveFile",
+      "moveDirectory",
+      "listResources",
+      "getResourceContent",
+      "deployArtifact",
+      "deployBuildArtifacts",
+      "publishBuiltExperience",
+      "validateComponent",
+      "generateComponentStyles",
+      "getTemplateAgentInstructions",
+      "listTemplateExperiences",
+      "modifyExperience",
+      "modifyAgent",
+      "modifyScene",
+      "getExperience",
+      "createAgentPrompt",
+      "createSupplementalFile",
+      "addSound",
+      "listAgentPrompts",
+      "getAgentPrompt",
+      "listSupplementalFiles",
+      "getSupplementalFile",
+      "generateImages"
+    ]
+  }
+}

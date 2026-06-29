@@ -1,0 +1,279 @@
+{
+  "version": "1.0.9",
+  "kind": "template",
+  "title": "Teachback Template Experience (With Workflows)",
+  "description": "A template teachback experience with standard supplemental instructions and three-agent flow (mentor → practice → feedback).",
+  "aiConfigurations": {
+    "voice-interactive": {
+      "provider": "openai",
+      "api": "realtime",
+      "model": "gpt-realtime-1.5",
+      "streaming": true,
+      "modalities": [
+        "audio",
+        "text"
+      ],
+      "realtimeSettings": {
+        "silence_duration_ms": 1500,
+        "threshold": 0.7,
+        "prefix_padding_ms": 300,
+        "create_response": true,
+        "interrupt_response": true
+      }
+    },
+    "analytics": {
+      "provider": "openai",
+      "api": "responses",
+      "model": "gpt-5",
+      "streaming": false,
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  "resources": {
+    "scenes": [
+      "resources/scenes/mentor-scene.png",
+      "resources/scenes/practice-scene.png",
+      "resources/scenes/feedback-scene.png"
+    ],
+    "instructions": {
+      "agent": {
+        "mentor": "resources/instructions/agent/mentor.md",
+        "practice": "resources/instructions/agent/practice.md",
+        "feedback": "resources/instructions/agent/feedback.md",
+        "studentReport": "resources/instructions/agent/student_report.md",
+        "classAnalytics": "resources/instructions/agent/class_analytics.md"
+      },
+      "supplemental": {
+        "agent": "resources/instructions/supplemental/agent.md",
+        "checklists": "resources/instructions/supplemental/checklists.md",
+        "error-handling": "resources/instructions/supplemental/error-handling.md",
+        "note-tools": "resources/instructions/supplemental/note-tools.md",
+        "scene": "resources/instructions/supplemental/scene.md",
+        "security": "resources/instructions/supplemental/security.md",
+        "tools": "resources/instructions/supplemental/tools.md",
+        "journal": "resources/instructions/supplemental/journal.md",
+        "mentor-journal-instructions": "resources/instructions/supplemental/mentor-journal-instructions.md",
+        "practice-journal-instructions": "resources/instructions/supplemental/practice-journal-instructions.md",
+        "feedback-journal-instructions": "resources/instructions/supplemental/feedback-journal-instructions.md"
+      }
+    }
+  },
+  "agents": {
+    "mentor": {
+      "name": "Mentor",
+      "voice": "marin",
+      "publicDescription": "Mentor guiding students through fundamentals.",
+      "downstreamAgents": [
+        "practice"
+      ],
+      "aiConfiguration": "voice-interactive",
+      "toolSets": [
+        "default"
+      ]
+    },
+    "practice": {
+      "name": "Practice Partner",
+      "voice": "shimmer",
+      "publicDescription": "Practice partner for simulation activities.",
+      "downstreamAgents": [
+        "feedback"
+      ],
+      "aiConfiguration": "voice-interactive",
+      "toolSets": [
+        "default"
+      ]
+    },
+    "feedback": {
+      "name": "Feedback Coach",
+      "voice": "marin",
+      "publicDescription": "Providing feedback on performance.",
+      "downstreamAgents": [],
+      "aiConfiguration": "voice-interactive",
+      "toolSets": [
+        "default"
+      ]
+    },
+    "studentReport": {
+      "name": "Student Report Agent",
+      "publicDescription": "Generates individual student performance reports based on session data.",
+      "type": "backend",
+      "aiConfiguration": "analytics",
+      "downstreamAgents": [],
+      "analyticsConfig": {
+        "type": "student",
+        "runnable": true,
+        "outputPath": "analytics/",
+        "outputFilename": "student_report.md"
+      },
+      "toolSets": [
+        "studentReport-tools"
+      ]
+    },
+    "classAnalytics": {
+      "name": "Class Analytics Agent",
+      "publicDescription": "Generates aggregate class performance analysis from all student reports.",
+      "type": "backend",
+      "aiConfiguration": "analytics",
+      "downstreamAgents": [],
+      "analyticsConfig": {
+        "type": "class",
+        "runnable": true,
+        "outputPath": "class_data/{classId}/",
+        "outputFilename": "class_report.md",
+        "dependsOn": [
+          "studentReport"
+        ]
+      },
+      "toolSets": [
+        "classAnalytics-tools"
+      ]
+    }
+  },
+  "initialAgent": "mentor",
+  "initialWorkflowPhase": "mentor",
+  "workflowPhases": [
+    {
+      "id": "mentor",
+      "title": "Set the stage",
+      "heading": "Make sure you can teach it.",
+      "description": "Work with the mentor until you understand the concept well enough to teach a peer.",
+      "initialAgent": "mentor",
+      "objectives": [
+        { "id": "concept-mastery", "description": "Demonstrate understanding deep enough to teach the concept back." },
+        { "id": "anticipate-confusions", "description": "Surface likely peer confusions so you can plan around them." }
+      ],
+      "promptFragments": {
+        "coldStart": "First entry into mentoring. Probe for genuine understanding before letting the student move on. They must be ready to teach a peer, not just answer questions.",
+        "reentry": "The student returned for more mentoring. Build on what they already understand and target remaining gaps."
+      }
+    },
+    {
+      "id": "practice",
+      "title": "Teach it back",
+      "heading": "Now you teach.",
+      "description": "Teach a peer the concept, coaching them through their own thinking.",
+      "initialAgent": "practice",
+      "objectives": [
+        { "id": "lead-the-explanation", "description": "Drive the explanation and respond to peer questions in their own terms." },
+        { "id": "diagnose-and-adapt", "description": "Notice misunderstanding and adapt the explanation in real time." }
+      ],
+      "promptFragments": {
+        "coldStart": "The student just left the mentor. Become the peer learner now — ask questions in your own voice and let them teach.",
+        "reentry": "The student returned to teach you more. Continue as the same peer learner; do not reset the conversation."
+      }
+    },
+    {
+      "id": "feedback",
+      "title": "Reflect on the teach-back",
+      "heading": "What landed, what to revisit.",
+      "description": "Synthesize how the teaching went and what to refine next.",
+      "initialAgent": "feedback",
+      "reentryAgent": "feedback",
+      "objectives": [
+        { "id": "evaluate-clarity", "description": "Cite moments where the explanation was clear or confused, with evidence." },
+        { "id": "concrete-next-steps", "description": "Leave the student with concrete improvements for next time they teach." }
+      ],
+      "promptFragments": {
+        "coldStart": "Teaching is done. Drop the in-character voice. Pull mentor and practice transcripts before giving evidence-based feedback.",
+        "afterSkip": "The student skipped ahead. Acknowledge briefly and provide the best feedback you can with whatever evidence is available."
+      }
+    }
+  ],
+  "lastModified": "2026-03-11T08:32:06.146Z",
+  "configVersion": 2,
+  "toolSets": {
+    "default": [
+      "agent",
+      "artifact",
+      "checklist",
+      "file",
+      "information",
+      "observe",
+      "present",
+      "scene",
+      "slide",
+      "toast",
+      "workflowPhase",
+      "finishExperience"
+    ],
+    "backend-default": [
+      "scene",
+      "information",
+      "file",
+      "artifact",
+      "checklist",
+      "agent",
+      "toast",
+      "observe",
+      "present",
+      "slide",
+      "createExperience",
+      "copyTemplate",
+      "createDirectory",
+      "createFile",
+      "deleteDirectory",
+      "deleteFile",
+      "moveFile",
+      "moveDirectory",
+      "listResources",
+      "getResourceContent",
+      "deployArtifact",
+      "validateComponent",
+      "generateComponentStyles",
+      "getTemplateAgentInstructions",
+      "listTemplateExperiences",
+      "modifyExperience",
+      "modifyAgent",
+      "modifyScene",
+      "getExperience",
+      "createAgentPrompt",
+      "createSupplementalFile",
+      "addSound",
+      "listAgentPrompts",
+      "getAgentPrompt",
+      "listSupplementalFiles",
+      "getSupplementalFile",
+      "generateImages"
+    ],
+    "studentReport-tools": [
+      "agent",
+      "artifact",
+      "batchReadSessionFiles",
+      "checklist",
+      "file",
+      "information",
+      "listClassSessions",
+      "listSessionFiles",
+      "observe",
+      "present",
+      "readClassData",
+      "readSessionFile",
+      "scene",
+      "slide",
+      "toast",
+      "writeClassData",
+      "writeSessionFile"
+    ],
+    "classAnalytics-tools": [
+      "agent",
+      "artifact",
+      "batchReadSessionFiles",
+      "checklist",
+      "file",
+      "information",
+      "listClassSessions",
+      "listSessionFiles",
+      "observe",
+      "present",
+      "readClassData",
+      "readSessionFile",
+      "scene",
+      "slide",
+      "toast",
+      "writeClassData",
+      "writeSessionFile"
+    ]
+  }
+}

@@ -46,7 +46,6 @@
       },
       "supplemental": {
         "agent": "resources/instructions/supplemental/agent.md",
-        "checklists": "resources/instructions/supplemental/checklists.md",
         "error-handling": "resources/instructions/supplemental/error-handling.md",
         "note-tools": "resources/instructions/supplemental/note-tools.md",
         "scene": "resources/instructions/supplemental/scene.md",
